@@ -1,0 +1,93 @@
+ 
+import os
+import json
+
+class Calculator:
+    def __init__(self):
+        self.result = None
+        self.history = []
+
+    def add(self, a, b):
+        return a + b
+
+    def subtract(self, a, b):
+        return a - b
+
+    def multiply(self, a, b):
+        return a * b
+
+    def divide(self, a, b):
+        if b == 0:
+            return "Ошибка: Деление на ноль!"
+        return a / b
+
+    def calculate(self, operation, a, b):
+        if operation == '1':
+            self.result = self.add(a, b)
+        elif operation == '2':
+            self.result = self.subtract(a, b)
+        elif operation == '3':
+            self.result = self.multiply(a, b)
+        elif operation == '4':
+            self.result = self.divide(a, b)
+        else:
+            return "Ошибка: Неверная операция!"
+
+        self.history.append(f"{a} {operation} {b} = {self.result}")
+        return self.result
+
+    def save_history(self, filename):
+        with open(filename, 'w') as file:
+            json.dump(self.history, file)
+
+    def show_history(self):
+        print("История вычислений:")
+        for entry in self.history:
+            print(entry)
+
+def main():
+    calculator = Calculator()
+
+    while True:
+        print("Welcome! ПРОЕКТИРОВАНИЕ ТЕСТ-КЕЙСОВ, ИСИП 21/1, ГРЕХОВА ЛЮБОВЬ СЕРГЕЕВНА")
+        print("Консольный калькулятор")
+        print("Выберите операцию:")
+        print("1. Сложение (+)")
+        print("2. Вычитание (-)")
+        print("3. Умножение (*)")
+        print("4. Деление (/)")
+        print("5. Выход")
+
+        operation = input("Введите номер операции (1-5): ")
+
+        if operation == '5':
+            if calculator.history:
+                confirm = input("Результат не сохранён. Выйти? (y/n): ")
+                if confirm.lower() == 'y':
+                    break
+                else:
+                    continue
+            else:
+                break
+
+        try:
+            a = float(input("Введите первое число: "))
+            b = float(input("Введите второе число: "))
+        except ValueError:
+            print("Ошибка: Пожалуйста, введите корректные числа.")
+            input("Нажмите Enter для продолжения...")
+            continue
+
+        result = calculator.calculate(operation, a, b)
+        print(f"Результат: {result}")
+
+        save = input("Хотите сохранить историю вычислений? (y/n): ")
+        if save.lower() == 'y':
+            filename = input("Введите имя файла для сохранения (например, history.json): ")
+            calculator.save_history(filename)
+            print(f"История сохранена в {filename}")
+
+        input("Нажмите Enter для продолжения...")
+
+if __name__ == "__main__":
+    main()
